@@ -1,10 +1,13 @@
 import Cutie
 import QtQuick
 import QtMultimedia
+import Qt5Compat.GraphicalEffects
 
-CutieWindow {
+Item {
 	id: root
-	title: qsTr("Call")
+    visible: true
+    width: Screen.width
+    height: Screen.height - 30
 	property var lineId: ""
 	property var call: null
 	property bool wasIncoming: false
@@ -27,9 +30,28 @@ CutieWindow {
 		if (root.wasIncoming) {
 			callSound.play();
 		}
-
-		if (root.lineId) root.title = qsTr("Call with %1").arg(root.lineId);
 	}
+
+    Image {
+        id: wallpaper
+		width: Screen.width
+		height: Screen.height
+		y: -30
+        source: "file:/" + Atmosphere.path + "/wallpaper.jpg"
+        fillMode: Image.PreserveAspectCrop
+        visible: false
+    }
+
+    FastBlur {
+        id: wallpaperBlur
+        anchors.fill: wallpaper
+        source: wallpaper
+        radius: 70
+    }
+
+	CutieToastHandler {
+        id: toastHandler
+    }
 
 	CutieStore {
 		id: logStore

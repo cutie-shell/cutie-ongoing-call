@@ -6,6 +6,7 @@ set(QT_DEFAULT_MAJOR_VERSION 6)
 set(QAPPLICATION_CLASS QApplication)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Quick Qml LinguistTools)
+find_package(LayerShellQt6 REQUIRED)
 
 qt_standard_project_setup()
 
@@ -24,6 +25,6 @@ qt_add_translations(cutie-ongoing-call
 
 target_include_directories(cutie-ongoing-call PUBLIC src)
 
-target_link_libraries(cutie-ongoing-call PUBLIC Qt::Core Qt::Quick Qt::Qml Qt::DBus)
+target_link_libraries(cutie-ongoing-call PUBLIC LayerShellQtInterface6 Qt::Core Qt::Quick Qt::Qml Qt::DBus)
 
 install(TARGETS cutie-ongoing-call RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")

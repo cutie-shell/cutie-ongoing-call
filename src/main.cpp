@@ -6,8 +6,11 @@
 #include <QtQuick/QQuickItem>
 #include <QtQuick/QQuickView>
 #include <QTranslator>
+#include <LayerShellQt6/shell.h>
+#include <LayerShellQt6/window.h>
 
 int main(int argc, char *argv[]) {
+    LayerShellQt::Shell::useLayerShell();
     QGuiApplication app(argc, argv);
 
     QString locale = QLocale::system().name();
@@ -17,16 +20,20 @@ int main(int argc, char *argv[]) {
     if (translated)
         app.installTranslator(&translator);
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/Call.qml"));
-    QObject::connect(
-        &engine, &QQmlApplicationEngine::objectCreated, &app,
-        [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-        },
-        Qt::QueuedConnection);
-    engine.load(url);
+    QQuickView view;
+
+    LayerShellQt::Window *layerShell = LayerShellQt::Window::get(&view);
+    layerShell->setLayer(LayerShellQt::Window::LayerOverlay);
+    layerShell->setAnchors(LayerShellQt::Window::AnchorTop);
+    layerShell->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityExclusive);
+    layerShell->setExclusiveZone(-1);
+    layerShell->setScope("cutie-ongoing-call");
+
+    QObject::connect(view.engine(), &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
+
+    view.setSource(QUrl("qrc:/Call.qml"));
+    view.setColor(QColor(Qt::transparent));
+    view.show();
 
     return app.exec();
 }
