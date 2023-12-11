@@ -7,7 +7,7 @@ Item {
 	id: root
     visible: true
     width: Screen.width
-    height: Screen.height - 30
+    height: Screen.height
 	property var lineId: ""
 	property var call: null
 	property bool wasIncoming: false
@@ -36,7 +36,6 @@ Item {
         id: wallpaper
 		width: Screen.width
 		height: Screen.height
-		y: -30
         source: "file:/" + Atmosphere.path + "/wallpaper.jpg"
         fillMode: Image.PreserveAspectCrop
         visible: false
