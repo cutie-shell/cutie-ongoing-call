@@ -1,4 +1,5 @@
 import Cutie
+import Cutie.Wlc
 import QtQuick
 import QtMultimedia
 import Qt5Compat.GraphicalEffects
@@ -12,6 +13,7 @@ Item {
 	property var call: null
 	property bool wasIncoming: false
 	property bool answered: false
+	property bool hangupMode: false
 
 	Component.onDestruction: {
 		CutieModemSettings.modems[0].audioMode = 0;
@@ -29,6 +31,17 @@ Item {
 		root.wasIncoming = root.call.data["State"] === "incoming";
 		if (root.wasIncoming) {
 			callSound.play();
+		}
+	}
+
+	OutputPowerManagerV1 {
+		id: outputPowerManager
+
+		onModeChanged: {
+			if (root.wasIncoming) {
+				root.hangupMode = outputPowerManager.mode;
+				outputPowerManager.mode = true;
+			}
 		}
 	}
 
@@ -137,6 +150,8 @@ Item {
 		id: quitTimer
 		interval: 2500
 		onTriggered: {
+			if (root.wasIncoming)
+				outputPowerManager.mode = root.hangupMode;
 			Qt.quit();
 		}
 	}
