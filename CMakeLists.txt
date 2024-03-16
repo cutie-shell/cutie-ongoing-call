@@ -15,8 +15,7 @@ set(cutie-ongoing-call_SOURCES
 )
 
 qt_add_resources(APP_RESOURCES 
-	${CMAKE_SOURCE_DIR}/src/qml/qml.qrc
-	${CMAKE_SOURCE_DIR}/sounds/sounds.qrc)
+	${CMAKE_SOURCE_DIR}/src/qml/qml.qrc)
 
 qt_add_executable(cutie-ongoing-call ${cutie-ongoing-call_SOURCES} ${APP_RESOURCES})
 

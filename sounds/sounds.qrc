@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/sounds">
-        <file>ringtone.wav</file>
-    </qresource>
-</RCC>
