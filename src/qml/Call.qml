@@ -71,10 +71,11 @@ Item {
 		storeName: "callLog"
 	}
 
-	SoundEffect {
+	MediaPlayer {
         id: callSound
-        source: "qrc:/sounds/ringtone.wav"
-        loops: SoundEffect.Infinite
+        source: Atmosphere.themeSound("phone-incoming-call")
+        audioOutput: AudioOutput {}
+        loops: MediaPlayer.Infinite
     }
 
 	CutiePageHeader {
