@@ -14,6 +14,7 @@ Item {
 	property bool wasIncoming: false
 	property bool answered: false
 	property bool hangupMode: false
+	property var callSoundId
 
 	Component.onDestruction: {
 		CutieModemSettings.modems[0].audioMode = 0;
@@ -30,7 +31,8 @@ Item {
 		root.lineId = root.call.data["LineIdentification"];
 		root.wasIncoming = root.call.data["State"] === "incoming";
 		if (root.wasIncoming) {
-			callSound.play();
+			root.callSoundId = 
+				CutieFeedback.trigger(Application.name, "phone-incoming-call", {}, 0);
 		}
 	}
 
@@ -71,13 +73,6 @@ Item {
 		storeName: "callLog"
 	}
 
-	MediaPlayer {
-        id: callSound
-        source: Atmosphere.themeSound("phone-incoming-call")
-        audioOutput: AudioOutput {}
-        loops: MediaPlayer.Infinite
-    }
-
 	CutiePageHeader {
 		id: header
 		title: root.lineId
@@ -93,7 +88,7 @@ Item {
 		anchors.margins: 20
 		text: qsTr("Answer")
 		onClicked: {
-			callSound.stop();
+			CutieFeedback.end(root.callSoundId);
 			CutieModemSettings.modems[0].audioMode = 1;
 			root.call.answer();
 			root.answered = true;
@@ -109,7 +104,7 @@ Item {
 		text: qsTr("Hangup")
 		color: "red"
 		onClicked: {
-			callSound.stop();
+			CutieFeedback.end(root.callSoundId);
 			root.call.hangup();
 			CutieModemSettings.modems[0].audioMode = 0;
 		}
@@ -118,7 +113,7 @@ Item {
 	Connections {
 		target: root.call
 		function onDisconnected(reason) {
-			callSound.stop();
+			CutieFeedback.end(root.callSoundId);
 
 			if (reason == "local") {
 				toastHandler.show(qsTr("Call ended successfully"), 2000);
