@@ -3,6 +3,7 @@ import Cutie.Wlc
 import QtQuick
 import QtMultimedia
 import Qt5Compat.GraphicalEffects
+import QtSensors
 
 Item {
 	id: root
@@ -13,7 +14,7 @@ Item {
 	property var call: null
 	property bool wasIncoming: false
 	property bool answered: false
-	property bool hangupMode: false
+	property bool hangupMode: true
 	property var callSoundId
 
 	Component.onDestruction: {
@@ -35,6 +36,15 @@ Item {
 				CutieFeedback.trigger(Application.name, "phone-incoming-call", {}, 0);
 		}
 	}
+	
+	ProximitySensor {
+        id: proximity
+        active: true
+        onReadingChanged: {
+			if (root.call.data["State"] !== "incoming")
+				outputPowerManager.mode = !reading.near;
+		}
+    }
 
 	OutputPowerManagerV1 {
 		id: outputPowerManager
@@ -92,6 +102,7 @@ Item {
 			CutieModemSettings.modems[0].audioMode = 1;
 			root.call.answer();
 			root.answered = true;
+			outputPowerManager.mode = !proximity.reading.near;
 		}
 	}
 
@@ -146,8 +157,7 @@ Item {
 		id: quitTimer
 		interval: 2500
 		onTriggered: {
-			if (root.wasIncoming)
-				outputPowerManager.mode = root.hangupMode;
+			outputPowerManager.mode = root.hangupMode;
 			Qt.quit();
 		}
 	}
