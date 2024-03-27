@@ -29,8 +29,8 @@ Item {
 		});
 
 		if (!root.call) Qt.quit();
-		root.lineId = root.call.data["LineIdentification"];
-		root.wasIncoming = root.call.data["State"] === "incoming";
+		root.lineId = root.call.lineIdentification;
+		root.wasIncoming = root.call.state === CutieCall.Incoming;
 		if (root.wasIncoming) {
 			root.callSoundId = 
 				CutieFeedback.trigger(Application.name, "phone-incoming-call", {}, 0);
@@ -41,7 +41,7 @@ Item {
         id: proximity
         active: true
         onReadingChanged: {
-			if (root.call.data["State"] !== "incoming")
+			if (root.call.state !== CutieCall.Incoming)
 				outputPowerManager.mode = !reading.near;
 		}
     }
@@ -91,7 +91,7 @@ Item {
 
 	CutieButton {
 		id: answer
-		visible: root.call.data["State"] === "incoming"
+		visible: root.call.state === CutieCall.Incoming
 		anchors.bottom: hangup.top
 		anchors.left: parent.left
 		anchors.right: parent.right
