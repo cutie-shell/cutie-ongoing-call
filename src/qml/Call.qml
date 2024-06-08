@@ -16,6 +16,21 @@ Item {
 	property bool answered: false
 	property bool hangupMode: true
 	property var callSoundId
+	property string localISO: CutiePhonenumberHelper.MCCtoISO(
+		CutieModemSettings.modems[0].networkCountryCode)
+
+	function nameForNumber(number) {
+		let sender = CutiePhonenumberHelper.createPhonenumber(number, root.localISO);
+		for (let i = 0; i < contactStore.data.contacts.length; i++) {
+			let contact = contactStore.data.contacts[i]
+			let contactNumber = CutiePhonenumberHelper.createPhonenumber(
+				contact.PhoneNumber, root.localISO);
+			if (sender.locallyEqualTo(contactNumber, root.localISO)) {
+				return contact.FirstName + " " + contact.LastName;
+			}
+		}
+		return number;
+	}
 
 	Component.onDestruction: {
 		CutieModemSettings.modems[0].audioMode = 0;
@@ -83,9 +98,15 @@ Item {
 		storeName: "callLog"
 	}
 
+	CutieStore {
+		id: contactStore
+		appName: "cutie-contacts"
+		storeName: "contacts"
+	}
+
 	CutiePageHeader {
 		id: header
-		title: root.lineId
+		title: nameForNumber(root.lineId)
 		anchors.top: parent.top
 	}
 
