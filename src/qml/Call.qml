@@ -162,7 +162,7 @@ Item {
 			let data = logStore.data;
 			let logEntries = data.entries;
 			if (!logEntries) logEntries = [];
-			logEntries.push({
+			logEntries.unshift({
 				lineId: sender.format(CutiePhonenumber.International),
 				time:  Date.now(),
 				type: (root.wasIncoming 
