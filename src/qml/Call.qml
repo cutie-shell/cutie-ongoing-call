@@ -157,11 +157,13 @@ Item {
 				toastHandler.show(qsTr("Call ended by the network"), 2000);
 			}
 
+			let sender = CutiePhonenumberHelper.createPhonenumber(
+				root.lineId, root.localISO);
 			let data = logStore.data;
 			let logEntries = data.entries;
 			if (!logEntries) logEntries = [];
 			logEntries.push({
-				lineId: root.lineId,
+				lineId: sender.format(CutiePhonenumber.International),
 				time:  Date.now(),
 				type: (root.wasIncoming 
 				? (root.answered ? "Incoming" : "Missed")
