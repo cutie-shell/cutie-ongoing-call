@@ -21,14 +21,15 @@ Item {
 
 	function nameForNumber(number) {
 		let sender = CutiePhonenumberHelper.createPhonenumber(number, root.localISO);
-		for (let i = 0; i < contactStore.data.contacts.length; i++) {
-			let contact = contactStore.data.contacts[i]
-			let contactNumber = CutiePhonenumberHelper.createPhonenumber(
-				contact.PhoneNumber, root.localISO);
-			if (sender.locallyEqualTo(contactNumber, root.localISO)) {
-				return contact.FirstName + " " + contact.LastName;
+		if ("contacts" in contactStore.data)
+			for (let i = 0; i < contactStore.data.contacts.length; i++) {
+				let contact = contactStore.data.contacts[i]
+				let contactNumber = CutiePhonenumberHelper.createPhonenumber(
+					contact.PhoneNumber, root.localISO);
+				if (sender.locallyEqualTo(contactNumber, root.localISO)) {
+					return contact.FirstName + " " + contact.LastName;
+				}
 			}
-		}
 		return number;
 	}
 
