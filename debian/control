@@ -25,4 +25,5 @@ Depends: ${misc:Depends},
          qml6-module-cutie,
          qml6-module-cutiemodem,
          qml6-module-cutiephonenumber,
+         qml6-module-cutiestore,
 Description: This package contains call handler for Cutie UI.
