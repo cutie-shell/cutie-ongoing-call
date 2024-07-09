@@ -1,4 +1,5 @@
 import Cutie
+import Cutie.Feedback
 import Cutie.Modem
 import Cutie.Phonenumber
 import Cutie.Store
